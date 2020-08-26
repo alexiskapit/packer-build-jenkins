@@ -19,6 +19,7 @@ ansiColor('xterm') {
         }
         stage('Store Artifacts') {
             archiveArtifacts 'manifest.json'
+            junit 'junit.xml'
         }
     }
 }
