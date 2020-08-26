@@ -1,14 +1,24 @@
 ---
+- hosts: all
+  become: true
+  tasks:
+   - name: Installing repo jor Java 8 in Ubuntu
+     apt_repository: repo='ppa:openjdk-r/ppa'
+
 - name: Install Jenkins 
   hosts: all
-  become: yes
+  become: true
   vars:
     ssh_use_pam: true # to allow access with our key on ec2
     jenkins_hostname: localhost
     ansible_remote_tmp: /tmp/ansible
     jenkins_plugins: [ansicolor]
-
+    java_packages:
+      - openjdk-8-jdk
+  
   roles:
+    - geerlingguy.java
     - geerlingguy.jenkins
-    - geerlingguy.ansible-role-packer
+    - geerlingguy.packer
     - geerlingguy.ansible
+
