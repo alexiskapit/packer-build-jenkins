@@ -30,10 +30,29 @@
     "type": "ansible",
     "playbook_file": "jenkins.yml",
     "extra_arguments": ["--extra-vars", "ansible_python_interpreter=/usr/bin/python3"]
-  }],
-  "post-processors": [{
+   },
+	 {
+	   "type": "file",
+		 "source": "test_infra.py",
+		 "destination": "/tmp/test_infra.py"
+	 },
+	 {
+	   "type": "shell",
+		 "inline": [
+		   "sudo apt-get install python3-pip -y",
+		    "pip3 install testinfra",
+		    "python3 -m pytest -v /tmp/test_infra.py -o junit_family=xunit2 --junit-xml junit.xml"
+	   ]		
+	 },
+	 {
+	   "type": "file",
+	   "source": "junit.xml",
+	   "destination": "junit.xml",
+	   "direction": "download"
+	 }],
+   "post-processors": [{
       "output": "manifest.json",
       "strip_path": true,
       "type": "manifest"
-    }]
+   }]
 }
